@@ -1,0 +1,74 @@
+Academic Non-Commercial License 1.0
+
+Copyright (c) 2026 Joaquín Antonio Galdame
+
+Permission is granted to use, reproduce, study, modify, and distribute this software, its source code, documentation, experimental designs, and associated materials solely for academic, educational, and non-commercial research purposes, subject to the following conditions:
+
+1. ATTRIBUTION
+
+Any copy, redistribution, derivative work, academic work, publication, presentation, report, thesis, dissertation, or other material that makes substantial use of this work must provide appropriate attribution to:
+
+Joaquín Antonio Galdame
+
+and, when applicable, reference the associated research project:
+
+“Mecanismo de sincronización confiable de datos con servicios externos para una PyME de desarrollo de software de la provincia de San Juan”.
+
+2. ACADEMIC AND RESEARCH USE
+
+The work may be used, reproduced, executed, studied, modified, and adapted for:
+
+* academic research;
+* university teaching and learning;
+* theses and dissertations;
+* scientific experimentation;
+* replication and reproduction studies;
+* educational activities;
+* personal non-commercial study.
+
+3. REDISTRIBUTION
+
+Redistribution of the original work or modified versions is permitted for non-commercial academic, educational, or research purposes provided that:
+
+* this copyright notice is retained;
+* this license is included with the redistributed work;
+* the original author is appropriately acknowledged;
+* modifications are clearly identified when applicable.
+
+4. COMMERCIAL USE
+
+Commercial use is not permitted without prior written authorization from the copyright holder.
+
+This restriction includes, but is not limited to:
+
+* selling the software or substantial portions of it;
+* incorporating it into commercial products or paid services;
+* using it as part of a commercial software offering;
+* providing commercial consulting or services substantially based on the work;
+* relicensing the work for commercial purposes.
+
+Commercial licensing may be requested separately from the copyright holder.
+
+5. ACADEMIC CITATION
+
+Academic citation, discussion, analysis, comparison, and reference to this work are expressly permitted and encouraged, provided that appropriate attribution is given.
+
+6. THIRD-PARTY MATERIALS AND DATASETS
+
+This license applies only to material for which Joaquín Antonio Galdame holds the applicable rights.
+
+Third-party libraries, dependencies, datasets, publications, trademarks, and other external materials remain subject to their respective licenses and terms of use.
+
+In particular, external datasets used to reproduce experiments are not relicensed under this license merely because they are referenced, downloaded, transformed, or processed by this project.
+
+7. NO WARRANTY
+
+THE WORK IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, CORRECTNESS, REPRODUCIBILITY, OR NON-INFRINGEMENT.
+
+IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM THE USE OF THE WORK.
+
+8. ACCEPTANCE
+
+By using, modifying, or redistributing this work, you agree to comply with the terms of this license.
+
+Any use outside the permissions granted by this license requires prior written authorization from the copyright holder.

@@ -1,0 +1,76 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Test / coverage
+coverage/
+.nyc_output/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime files
+*.pid
+*.pid.lock
+
+# IDEs
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker local overrides
+compose.override.yaml
+docker-compose.override.yml
+
+# Local databases / volumes
+postgres-data/
+rabbitmq-data/
+grafana-data/
+prometheus-data/
+
+# Raw external datasets
+data/raw/*
+!data/raw/.gitkeep
+
+# Generated normalized datasets
+data/generated/*
+!data/generated/.gitkeep
+
+# Experimental results generated locally
+results/raw/*
+!results/raw/.gitkeep
+
+results/processed/*
+!results/processed/.gitkeep
+
+# Temporary files
+tmp/
+temp/
+.cache/
