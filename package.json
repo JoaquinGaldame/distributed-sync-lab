@@ -16,12 +16,5 @@
     "typescript": "^5",
     "vitest": "^3"
   },
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "11.1.2",
-      "onFail": "download"
-    }
-  },
   "type": "module"
 }

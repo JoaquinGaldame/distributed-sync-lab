@@ -108,7 +108,6 @@ Las diferencias observadas deberán ser atribuibles, en la medida de lo posible,
 
 * Node.js
 * TypeScript
-* pnpm workspaces
 * Fastify
 * PostgreSQL
 * RabbitMQ
@@ -121,6 +120,8 @@ Las diferencias observadas deberán ser atribuibles, en la medida de lo posible,
 * Vitest
 
 Durante la ejecución experimental oficial se congelarán las versiones relevantes del entorno.
+
+Cada aplicación del laboratorio es un proyecto aislado: mantiene sus propias dependencias, su configuración y sus comandos de compilación y ejecución. El repositorio no utiliza un workspace JavaScript/TypeScript ni requiere un gestor de paquetes común en la raíz. Para preparar o ejecutar una aplicación, se deben seguir las instrucciones y utilizar las herramientas definidas por ese proyecto.
 
 ## Estructura prevista
 
