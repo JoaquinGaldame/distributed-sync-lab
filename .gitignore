@@ -3,6 +3,17 @@ dist/
 build/
 out/
 
+# Academic PMS (.NET)
+/apps/academic-pms/[Bb]in/
+/apps/academic-pms/[Oo]bj/
+/apps/academic-pms/.vs/
+/apps/academic-pms/TestResults/
+/apps/academic-pms/artifacts/
+/apps/academic-pms/Infrastructure/Migrations/
+*.user
+*.rsuser
+*.sln.docstates
+
 # Test / coverage
 coverage/
 
@@ -25,7 +36,6 @@ logs/
 !.vscode/settings.json
 .idea/
 *.suo
-*.sln
 *.sw?
 
 # OS
