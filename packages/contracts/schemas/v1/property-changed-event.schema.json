@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:distributed-sync-lab:contracts:v1:property-changed-event",
+  "title": "PropertyChangedEvent v1",
+  "type": "object",
+  "properties": {
+    "eventId": {
+      "type": "string"
+    },
+    "eventType": {
+      "const": "PropertyChanged"
+    },
+    "propertyId": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number"
+    },
+    "occurredAt": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "eventId",
+    "eventType",
+    "propertyId",
+    "version",
+    "occurredAt"
+  ],
+  "additionalProperties": true
+}

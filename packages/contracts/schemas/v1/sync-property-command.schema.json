@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:distributed-sync-lab:contracts:v1:sync-property-command",
+  "title": "SyncPropertyCommand v1",
+  "type": "object",
+  "properties": {
+    "experimentId": {
+      "type": "string"
+    },
+    "jobId": {
+      "type": "string"
+    },
+    "propertyId": {
+      "type": "string"
+    },
+    "version": {
+      "type": "number"
+    },
+    "target": {
+      "$ref": "#/$defs/syncTarget"
+    },
+    "idempotencyKey": {
+      "type": "string"
+    },
+    "desiredState": {
+      "$ref": "#/$defs/propertyState"
+    }
+  },
+  "required": [
+    "jobId",
+    "propertyId",
+    "version",
+    "target",
+    "idempotencyKey",
+    "desiredState"
+  ],
+  "additionalProperties": true,
+  "$defs": {
+    "syncTarget": {
+      "type": "string",
+      "enum": [
+        "ota-replace",
+        "ota-async"
+      ]
+    },
+    "propertyState": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "name",
+        "price"
+      ],
+      "additionalProperties": true
+    }
+  }
+}

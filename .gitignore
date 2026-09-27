@@ -1,15 +1,10 @@
-# Dependencies
-node_modules/
-
 # Build output
 dist/
 build/
 out/
-*.tsbuildinfo
 
 # Test / coverage
 coverage/
-.nyc_output/
 
 # Environment / secrets
 .env
@@ -19,9 +14,6 @@ coverage/
 # Logs
 logs/
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Runtime files
 *.pid
@@ -33,8 +25,6 @@ yarn-error.log*
 !.vscode/settings.json
 .idea/
 *.suo
-*.ntvs*
-*.njsproj
 *.sln
 *.sw?
 

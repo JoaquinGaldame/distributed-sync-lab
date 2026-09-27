@@ -1,0 +1,12 @@
+{
+  "experimentId": "experiment-0003",
+  "jobId": "job-0015",
+  "propertyId": "property-0042",
+  "version": 7,
+  "target": "ota-replace",
+  "idempotencyKey": "job-0015:property-0042:7:ota-replace",
+  "desiredState": {
+    "name": "Departamento céntrico",
+    "price": 125.5
+  }
+}

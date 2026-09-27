@@ -106,9 +106,8 @@ Las diferencias observadas deberán ser atribuibles, en la medida de lo posible,
 
 ## Tecnologías principales
 
-* Node.js
-* TypeScript
-* Fastify
+* .NET 10 para el PMS académico
+* JSON Schema para los contratos de comunicación independientes del lenguaje
 * PostgreSQL
 * RabbitMQ
 * Docker
@@ -117,11 +116,14 @@ Las diferencias observadas deberán ser atribuibles, en la medida de lo posible,
 * Toxiproxy
 * Prometheus
 * Grafana
-* Vitest
 
 Durante la ejecución experimental oficial se congelarán las versiones relevantes del entorno.
 
-Cada aplicación del laboratorio es un proyecto aislado: mantiene sus propias dependencias, su configuración y sus comandos de compilación y ejecución. El repositorio no utiliza un workspace JavaScript/TypeScript ni requiere un gestor de paquetes común en la raíz. Para preparar o ejecutar una aplicación, se deben seguir las instrucciones y utilizar las herramientas definidas por ese proyecto.
+Cada aplicación del laboratorio es un proyecto aislado: mantiene sus propias dependencias, su configuración y sus comandos de compilación y ejecución. El repositorio no impone Node.js, TypeScript ni otro conjunto de herramientas general. La tecnología de las aplicaciones distintas del PMS académico se decidirá al implementarlas.
+
+## Contratos de comunicación
+
+Los mensajes compartidos se especifican mediante esquemas JSON independientes del lenguaje en [`packages/contracts`](./packages/contracts/README.md). Cada aplicación implementará sus propios tipos a partir de esos contratos. Los tipos C# se crearán dentro de cada aplicación cuando sean necesarios; no se mantiene una biblioteca .NET compartida sin consumidores concretos.
 
 ## Estructura prevista
 
@@ -136,11 +138,9 @@ distributed-sync-lab/
 │   └── experiment-runner/
 │
 ├── packages/
-│   ├── contracts/
-│   ├── telemetry/
-│   ├── experiment-model/
-│   ├── test-fixtures/
-│   └── config/
+│   └── contracts/
+│       ├── schemas/
+│       └── examples/
 │
 ├── data/
 │   ├── raw/
