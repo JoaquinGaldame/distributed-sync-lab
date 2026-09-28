@@ -3,12 +3,14 @@ dist/
 build/
 out/
 
-# Academic PMS (.NET)
-/apps/academic-pms/[Bb]in/
-/apps/academic-pms/[Oo]bj/
-/apps/academic-pms/.vs/
-/apps/academic-pms/TestResults/
-/apps/academic-pms/artifacts/
+# .NET
+**/[Bb]in/
+**/[Oo]bj/
+**/.vs/
+**/[Tt]est[Rr]esults/
+**/artifacts/
+
+# Academic PMS
 /apps/academic-pms/Infrastructure/Migrations/
 *.user
 *.rsuser
