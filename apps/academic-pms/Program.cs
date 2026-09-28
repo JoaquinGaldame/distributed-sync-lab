@@ -1,4 +1,3 @@
-using AcademicPms.Api;
 using AcademicPms.Application;
 using AcademicPms.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +9,11 @@ var connectionString = builder.Configuration.GetConnectionString("PmsDb") ?? thr
 builder.Services.AddDbContext<PmsDbContext>( options => options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<PropertyService>();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
 app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
-app.MapPropertyEndpoints();
+app.MapControllers();
 
 app.Run();

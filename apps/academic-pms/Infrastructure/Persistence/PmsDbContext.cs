@@ -29,6 +29,32 @@ public sealed class PmsDbContext(DbContextOptions<PmsDbContext> options)
             entity.Property(x => x.Price)
                 .HasColumnName("price")
                 .HasPrecision(12, 2);
+            
+            entity.Property(x => x.SourceListingId)
+                .HasColumnName("source_listing_id")
+                .HasMaxLength(50);
+
+            entity.HasIndex(x => x.SourceListingId)
+                .IsUnique();
+
+            entity.Property(x => x.RoomType)
+                .HasColumnName("room_type")
+                .HasMaxLength(30);
+
+            entity.Property(x => x.Neighbourhood)
+                .HasColumnName("neighbourhood")
+                .HasMaxLength(100);
+
+            entity.Property(x => x.Latitude)
+                .HasColumnName("latitude")
+                .HasPrecision(18, 15);
+
+            entity.Property(x => x.Longitude)
+                .HasColumnName("longitude")
+                .HasPrecision(18, 15);
+
+            entity.Property(x => x.MinimumNights)
+                .HasColumnName("minimum_nights");
 
             entity.Property(x => x.Version)
                 .HasColumnName("version")
@@ -70,6 +96,29 @@ public sealed class PmsDbContext(DbContextOptions<PmsDbContext> options)
             entity.Property(x => x.StatePrice)
                 .HasColumnName("state_price")
                 .HasPrecision(12, 2);
+                
+            entity.Property(x => x.SourceListingId)
+                .HasColumnName("source_listing_id")
+                .HasMaxLength(50);
+
+            entity.Property(x => x.StateRoomType)
+                .HasColumnName("state_room_type")
+                .HasMaxLength(30);
+
+            entity.Property(x => x.StateNeighbourhood)
+                .HasColumnName("state_neighbourhood")
+                .HasMaxLength(100);
+
+            entity.Property(x => x.StateLatitude)
+                .HasColumnName("state_latitude")
+                .HasPrecision(18, 15);
+
+            entity.Property(x => x.StateLongitude)
+                .HasColumnName("state_longitude")
+                .HasPrecision(18, 15);
+
+            entity.Property(x => x.StateMinimumNights)
+                .HasColumnName("state_minimum_nights");
         });
     }
 }
