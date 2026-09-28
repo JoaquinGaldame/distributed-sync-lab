@@ -1,6 +1,8 @@
 using AcademicPms.Application;
 using AcademicPms.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using AcademicPms.Application.Imports;
+using AcademicPms.Infrastructure.Imports;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,8 @@ var connectionString = builder.Configuration.GetConnectionString("PmsDb") ?? thr
 builder.Services.AddDbContext<PmsDbContext>( options => options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<PropertyService>();
+builder.Services.AddScoped<InsideAirbnbCsvReader>();
+builder.Services.AddScoped<InsideAirbnbImportService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
