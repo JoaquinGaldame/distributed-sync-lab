@@ -33,7 +33,7 @@ public sealed class InsideAirbnbImportService(
         if (await db.Properties.AnyAsync(ct)
             || await db.PropertyChanges.AnyAsync(ct))
         {
-            throw new InvalidOperationException("pms_db contiene propiedades o cambios. " + "La carga inicial requiere vaciar únicamente esas tablas.");
+            throw new InvalidOperationException("rental_management contiene propiedades o cambios. " + "La carga inicial requiere vaciar únicamente esas tablas.");
         }
 
         await using var transaction =

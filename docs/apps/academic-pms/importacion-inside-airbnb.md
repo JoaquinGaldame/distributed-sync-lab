@@ -1,11 +1,11 @@
 # Importar Inside Airbnb en Academic PMS
 
-Esta guía carga el snapshot `listings.csv` elegido para el laboratorio en `pms_db`. La importación se realiza mediante la **API Academic PMS**; el lector, la normalización y la escritura pertenecen al mismo proyecto .NET 10.
+Esta guía carga el snapshot `listings.csv` elegido para el laboratorio en la base fuente compartida `rental_management`. La importación se realiza mediante la **API Academic PMS**; el lector, la normalización y la escritura pertenecen al mismo proyecto .NET 10.
 
 Ejecutá los comandos desde la raíz de `distributed-sync-lab` en Windows. El archivo fuente debe estar en:
 
 ```text
-data/inside-airbnb/buenos-aires/listings.csv
+data/inside-airbnb/listings.csv
 ```
 
 El archivo seleccionado tiene SHA-256:
@@ -25,16 +25,16 @@ docker compose up -d
 docker compose ps
 ```
 
-`sync-lab-postgres` debe figurar como `healthy`. Configurá la conexión a `pms_db` con el usuario y la contraseña definidos para tu instalación local. Por ejemplo, en **CMD**:
+`sync-lab-postgres` debe figurar como `healthy`. Configurá la conexión a `rental_management` con el usuario y la contraseña definidos para tu instalación local. Por ejemplo, en **CMD**:
 
 ```cmd
-set "ConnectionStrings__PmsDb=Host=localhost;Port=5432;Database=pms_db;Username=pms_user;Password=<TU_PASSWORD>"
+set "ConnectionStrings__PmsDb=Host=localhost;Port=5433;Database=rental_management;Username=rental_management_user;Password=<TU_PASSWORD>"
 ```
 
 En **PowerShell**:
 
 ```powershell
-$env:ConnectionStrings__PmsDb = 'Host=localhost;Port=5432;Database=pms_db;Username=pms_user;Password=<TU_PASSWORD>'
+$env:ConnectionStrings__PmsDb = 'Host=localhost;Port=5433;Database=rental_management;Username=rental_management_user;Password=<TU_PASSWORD>'
 ```
 
 Aplicá las migraciones ya versionadas e iniciá la API **en esa misma terminal**:
@@ -48,10 +48,10 @@ No es necesario crear una migración nueva para ejecutar esta guía.
 
 ## 2. Preparar una carga inicial limpia
 
-El endpoint de importación requiere que `properties` y `property_changes` estén vacías. Si conservás propiedades de pruebas anteriores, la solicitud responderá `409 Conflict`. Para eliminarlas **solo de `pms_db`**, desde otra terminal:
+El endpoint de importación requiere que `properties` y `property_changes` estén vacías. Si conservás propiedades de pruebas anteriores, la solicitud responderá `409 Conflict`. Para eliminar únicamente los datos importados de la fuente compartida, desde otra terminal:
 
 ```cmd
-docker compose exec postgres psql -U postgres -d pms_db -c "TRUNCATE TABLE property_changes, properties RESTART IDENTITY;"
+docker compose exec postgres psql -U postgres -d rental_management -c "TRUNCATE TABLE property_changes, properties RESTART IDENTITY;"
 ```
 
 Este comando borra todas las propiedades y sus cambios en el PMS. Conserva las migraciones y las otras bases. Ejecutalo únicamente cuando no necesites esos datos de prueba. **No uses `docker compose down -v`** para preparar esta carga.
@@ -61,7 +61,7 @@ Este comando borra todas las propiedades y sus cambios en el PMS. Conserva las m
 Desde otra terminal ubicada en la raíz del repositorio:
 
 ```cmd
-curl.exe -X POST -F "file=@data\inside-airbnb\buenos-aires\listings.csv" http://localhost:5080/imports/inside-airbnb
+curl.exe -X POST -F "file=@data\inside-airbnb\listings.csv" http://localhost:5080/imports/inside-airbnb
 ```
 
 En Postman, la solicitud equivalente es:
@@ -96,14 +96,14 @@ Las exclusiones son reglas explícitas del importador. Cada alojamiento incorpor
 Comprobá los conteos directamente en PostgreSQL:
 
 ```cmd
-docker compose exec postgres psql -U postgres -d pms_db -c "SELECT (SELECT count(*) FROM properties) AS properties, (SELECT count(*) FROM property_changes) AS changes;"
+docker compose exec postgres psql -U postgres -d rental_management -c "SELECT (SELECT count(*) FROM properties) AS properties, (SELECT count(*) FROM property_changes) AS changes;"
 ```
 
 Ambas columnas deben valer **27890**. Comprobá un alojamiento y su cambio:
 
 ```cmd
-docker compose exec postgres psql -U postgres -d pms_db -c "SELECT id, source_listing_id, name, price, room_type, minimum_nights, version FROM properties WHERE id = 'IA-54019695';"
-docker compose exec postgres psql -U postgres -d pms_db -c "SELECT property_id, version, state_price, state_room_type, state_minimum_nights FROM property_changes WHERE property_id = 'IA-54019695';"
+docker compose exec postgres psql -U postgres -d rental_management -c "SELECT id, source_listing_id, name, price, room_type, minimum_nights, version FROM properties WHERE id = 'IA-54019695';"
+docker compose exec postgres psql -U postgres -d rental_management -c "SELECT property_id, version, state_price, state_room_type, state_minimum_nights FROM property_changes WHERE property_id = 'IA-54019695';"
 ```
 
 El alojamiento debe existir con versión `1`, `room_type = ENTIRE_HOME` y `minimum_nights = 14`; su cambio debe conservar esos mismos valores. También podés consultar:

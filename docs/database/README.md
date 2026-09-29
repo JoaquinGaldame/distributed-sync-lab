@@ -1,15 +1,14 @@
 # Bases de datos del laboratorio
 
-El entorno local utiliza una instancia de PostgreSQL con cuatro bases de datos independientes. Cada componente accede únicamente a su propia base mediante credenciales específicas. Esta separación permite representar estados distribuidos y observar el proceso de sincronización entre el sistema interno y el servicio externo simulado.
+El entorno local utiliza una instancia de PostgreSQL con tres bases de datos. Academic PMS y el futuro Main Worker comparten la base fuente `rental_management`; los simuladores OTA conservan bases de destino independientes. Esta separación permite representar la fuente interna y los estados externos para observar el proceso de sincronización.
 
 | Base de datos | Componente propietario | Responsabilidad |
 | --- | --- | --- |
-| `pms_db` | Academic PMS | Conserva las propiedades, sus versiones y los cambios pendientes. Tras importar los datos preparados de Inside Airbnb, el PMS es la fuente de verdad interna durante la ejecución. |
-| `orchestrator_db` | Main Worker | Registra los trabajos de sincronización, los envíos a destinos externos y sus resultados. |
+| `rental_management` | Academic PMS y futuro Main Worker | Conserva las propiedades, sus versiones y los cambios pendientes. Tras importar los datos preparados de Inside Airbnb, es la fuente de verdad interna que ambos componentes consultan. El Worker todavía no está implementado. |
 | `ota_replace_service_db` | OTA Replace Service | Conserva el estado de procesamiento que necesite el servicio especializado para gestionar los comandos recibidos. |
 | `ota_replace_simulator_db` | OTA Simulator | Conserva el estado de las propiedades alcanzado por el servicio externo simulado. Se consulta para verificar la convergencia con el estado deseado en el PMS. |
 
-La existencia de una base no implica que ya tenga tablas: el esquema de cada componente se incorporará al implementar su funcionalidad. Durante el flujo normal, ningún componente debe leer o modificar directamente las tablas de otro. La comunicación entre componentes se realiza mediante los contratos y las interfaces definidos para el laboratorio.
+La existencia de una base no implica que ya tenga tablas: el esquema de cada destino se incorporará al implementar su funcionalidad. Los componentes internos comparten deliberadamente la fuente `rental_management`; no deben usar como fuente las bases de los simuladores OTA.
 
 ## Acceder a las bases desde Docker
 
@@ -19,12 +18,12 @@ Desde la raíz de `distributed-sync-lab`, comprobá que PostgreSQL esté activo:
 docker compose ps
 ```
 
-### Acceder a `pms_db`
+### Acceder a `rental_management`
 
-Para entrar a `pms_db`:
+Para entrar a la base fuente compartida:
 
 ```cmd
-docker compose exec postgres psql -U postgres -d pms_db
+docker compose exec postgres psql -U postgres -d rental_management
 ```
 
 Dentro de `psql`, estos comandos permiten inspeccionar el PMS:
@@ -45,7 +44,6 @@ SELECT count(*) FROM property_changes;
 Para entrar directamente a cada una de las otras bases:
 
 ```cmd
-docker compose exec postgres psql -U postgres -d orchestrator_db
 docker compose exec postgres psql -U postgres -d ota_replace_service_db
 docker compose exec postgres psql -U postgres -d ota_replace_simulator_db
 ```
@@ -54,7 +52,7 @@ Una vez dentro, usá `\dt` para ver sus tablas. Si todavía no se implementó el
 
 ### Listar las bases
 
-Para listar las cuatro bases desde PostgreSQL:
+Para listar las bases desde PostgreSQL:
 
 ```cmd
 docker compose exec postgres psql -U postgres -d postgres -c "\l"
