@@ -9,6 +9,7 @@ public sealed class PmsDbContext(DbContextOptions<PmsDbContext> options)
 {
     public DbSet<Property> Properties => Set<Property>();
     public DbSet<PropertyChange> PropertyChanges => Set<PropertyChange>();
+    public DbSet<CalendarDays> CalendarDays => Set<CalendarDays>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -119,6 +120,35 @@ public sealed class PmsDbContext(DbContextOptions<PmsDbContext> options)
 
             entity.Property(x => x.StateMinimumNights)
                 .HasColumnName("state_minimum_nights");
+        });
+
+        modelBuilder.Entity<CalendarDays>(entity =>
+        {
+            entity.ToTable("calendar_days");
+            entity.HasKey(x => new { x.PropertyId, x.Date });
+
+            entity.Property(x => x.PropertyId)
+                .HasColumnName("property_id")
+                .HasMaxLength(50);
+
+            entity.Property(x => x.Date)
+                .HasColumnName("date");
+
+            entity.Property(x => x.IsAvailable)
+                .HasColumnName("is_available");
+
+            entity.Property(x => x.MinimumNights)
+                .HasColumnName("minimum_nights");
+
+            entity.Property(x => x.MaximumNights)
+                .HasColumnName("maximum_nights");
+
+            entity.HasOne<Property>()
+                .WithMany()
+                .HasForeignKey(x => x.PropertyId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(x => new { x.Date, x.IsAvailable });
         });
     }
 }

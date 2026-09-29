@@ -4,7 +4,7 @@ El entorno local utiliza una instancia de PostgreSQL con tres bases de datos. Ac
 
 | Base de datos | Componente propietario | Responsabilidad |
 | --- | --- | --- |
-| `rental_management` | Academic PMS y futuro Main Worker | Conserva las propiedades, sus versiones y los cambios pendientes. Tras importar los datos preparados de Inside Airbnb, es la fuente de verdad interna que ambos componentes consultan. El Worker todavía no está implementado. |
+| `rental_management` | Academic PMS y futuro Main Worker | Conserva las propiedades, sus calendarios, sus versiones y los cambios pendientes. Tras importar los datos preparados de Inside Airbnb, es la fuente de verdad interna que ambos componentes consultan. El Worker todavía no está implementado. |
 | `ota_replace_service_db` | OTA Replace Service | Conserva el estado de procesamiento que necesite el servicio especializado para gestionar los comandos recibidos. |
 | `ota_replace_simulator_db` | OTA Simulator | Conserva el estado de las propiedades alcanzado por el servicio externo simulado. Se consulta para verificar la convergencia con el estado deseado en el PMS. |
 
@@ -32,8 +32,10 @@ Dentro de `psql`, estos comandos permiten inspeccionar el PMS:
 \dt
 \d properties
 \d property_changes
+\d calendar_days
 SELECT count(*) FROM properties;
 SELECT count(*) FROM property_changes;
+SELECT count(*) FROM calendar_days;
 \q
 ```
 

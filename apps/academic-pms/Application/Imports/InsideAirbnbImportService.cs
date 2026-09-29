@@ -31,9 +31,12 @@ public sealed class InsideAirbnbImportService(
 
         // La carga inicial necesita una base PMS vacía para ser reproducible.
         if (await db.Properties.AnyAsync(ct)
-            || await db.PropertyChanges.AnyAsync(ct))
+            || await db.PropertyChanges.AnyAsync(ct)
+            || await db.CalendarDays.AnyAsync(ct))
         {
-            throw new InvalidOperationException("rental_management contiene propiedades o cambios. " + "La carga inicial requiere vaciar únicamente esas tablas.");
+            throw new InvalidOperationException(
+                "rental_management contiene propiedades, cambios o días de calendario. "
+                + "La carga inicial requiere vaciar esas tablas.");
         }
 
         await using var transaction =

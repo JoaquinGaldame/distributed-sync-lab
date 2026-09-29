@@ -14,10 +14,11 @@ Esta guía usa `http://localhost:5080`. Iniciá PostgreSQL y la API como indica 
 | `PUT` | `/properties/{id}` | Reemplaza el estado sincronizable; aumenta la versión solo si hay diferencias. |
 | `GET` | `/changes?after=0&limit=50` | Lee cambios ordenados por `sequence`, en lotes. |
 | `POST` | `/imports/inside-airbnb` | Carga el CSV elegido; ver [guía de importación](importacion-inside-airbnb.md). |
+| `POST` | `/imports/inside-airbnb/calendar` | Carga `calendar.csv` después de importar las propiedades. |
 
 ## Crear una propiedad manual
 
-Usá un ID distinto de los `IA-...` reservados para el dataset:
+Usá un ID que no coincida con un identificador importado del dataset:
 
 ```http
 POST http://localhost:5080/properties

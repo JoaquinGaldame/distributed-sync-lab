@@ -162,7 +162,7 @@ public sealed class InsideAirbnbCsvReader
             }
 
             properties.Add(new InsideAirbnbProperty(
-                $"IA-{sourceId}",
+                sourceId,
                 sourceId,
                 name,
                 price,

@@ -13,6 +13,8 @@ builder.Services.AddDbContext<PmsDbContext>( options => options.UseNpgsql(connec
 builder.Services.AddScoped<PropertyService>();
 builder.Services.AddScoped<InsideAirbnbCsvReader>();
 builder.Services.AddScoped<InsideAirbnbImportService>();
+builder.Services.AddScoped<InsideAirbnbCalendarCsvReader>();
+builder.Services.AddScoped<InsideAirbnbCalendarImportService>();
 builder.Services.AddControllers();
 
 var app = builder.Build();

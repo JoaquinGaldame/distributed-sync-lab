@@ -59,6 +59,9 @@ prometheus-data/
 data/raw/*
 !data/raw/.gitkeep
 
+# Inside Airbnb source datasets downloaded locally
+/data/inside-airbnb/calendar.csv
+
 # Generated normalized datasets
 data/generated/*
 !data/generated/.gitkeep
