@@ -60,7 +60,9 @@ data/raw/*
 !data/raw/.gitkeep
 
 # Inside Airbnb source datasets downloaded locally
+/data/inside-airbnb/listings.csv
 /data/inside-airbnb/calendar.csv
+/data/inside-airbnb/calendar.csv.gz
 
 # Generated normalized datasets
 data/generated/*

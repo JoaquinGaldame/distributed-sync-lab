@@ -9,14 +9,56 @@ data/inside-airbnb/listings.csv
 data/inside-airbnb/calendar.csv
 ```
 
-Los archivos seleccionados tienen SHA-256:
+## Procedencia del snapshot
+
+Los datos corresponden a **Buenos Aires, Ciudad Autónoma de Buenos Aires, Argentina**, snapshot publicado por Inside Airbnb el **29 de junio de 2026**. La página utilizada para seleccionar los archivos fue [Get the Data](https://insideairbnb.com/es/get-the-data/).
+
+| Archivo local | Archivo de origen | Descripción de Inside Airbnb | Tamaño local | SHA-256 local |
+| --- | --- | --- | ---: | --- |
+| `listings.csv` | [`visualisations/listings.csv`](https://data.insideairbnb.com/argentina/ciudad-aut%C3%B3noma-de-buenos-aires/buenos-aires/2026-06-29/visualisations/listings.csv) | Summary information and metrics for listings in Buenos Aires (good for visualisations). | 5.410.631 bytes | `845472c69e282ba85caf651c918701f0ae81b86e123b238f1eec8ef176e28a00` |
+| `calendar.csv` | [`data/calendar.csv.gz`](https://data.insideairbnb.com/argentina/ciudad-aut%C3%B3noma-de-buenos-aires/buenos-aires/2026-06-29/data/calendar.csv.gz) | Detailed Calendar Data. | 394.463.766 bytes | `610564cebd7c2224006ebc7d4d090c8949aa3fd1c299e41134113050a2ef5d38` |
+
+El hash y el tamaño del calendario corresponden al archivo `calendar.csv` **descomprimido**, que es el que recibe Academic PMS. `calendar.csv` y su archivo comprimido están excluidos de Git por su tamaño.
+
+### Recuperar el calendario
+
+Desde PowerShell, en la raíz del repositorio:
+
+```powershell
+$datasetDirectory = Join-Path (Get-Location) 'data\inside-airbnb'
+$calendarArchive = Join-Path $datasetDirectory 'calendar.csv.gz'
+$calendarCsv = Join-Path $datasetDirectory 'calendar.csv'
+
+New-Item -ItemType Directory -Force $datasetDirectory | Out-Null
+Invoke-WebRequest `
+  -Uri 'https://data.insideairbnb.com/argentina/ciudad-aut%C3%B3noma-de-buenos-aires/buenos-aires/2026-06-29/data/calendar.csv.gz' `
+  -OutFile $calendarArchive
+
+$sourceStream = [System.IO.File]::OpenRead($calendarArchive)
+$targetStream = [System.IO.File]::Create($calendarCsv)
+$gzipStream = [System.IO.Compression.GZipStream]::new(
+  $sourceStream,
+  [System.IO.Compression.CompressionMode]::Decompress)
+
+try {
+  $gzipStream.CopyTo($targetStream)
+}
+finally {
+  $gzipStream.Dispose()
+  $targetStream.Dispose()
+  $sourceStream.Dispose()
+}
+
+(Get-FileHash $calendarCsv -Algorithm SHA256).Hash.ToLowerInvariant()
+```
+
+El resultado esperado es:
 
 ```text
-845472c69e282ba85caf651c918701f0ae81b86e123b238f1eec8ef176e28a00
 610564cebd7c2224006ebc7d4d090c8949aa3fd1c299e41134113050a2ef5d38
 ```
 
-> La fecha y la URL exacta de obtención del snapshot aún deben documentarse. El hash identifica los bytes utilizados y evita confundirlos con otra descarga de igual nombre.
+Si el hash difiere, no importes el archivo: la descarga no corresponde exactamente al snapshot experimental seleccionado o quedó dañada.
 
 ## 1. Preparar PostgreSQL y la API
 
