@@ -10,6 +10,8 @@ public sealed class PmsDbContext(DbContextOptions<PmsDbContext> options)
     public DbSet<Property> Properties => Set<Property>();
     public DbSet<PropertyChange> PropertyChanges => Set<PropertyChange>();
     public DbSet<CalendarDays> CalendarDays => Set<CalendarDays>();
+    public DbSet<Channel> Channels => Set<Channel>();
+    public DbSet<Publication> Publications => Set<Publication>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -149,6 +151,113 @@ public sealed class PmsDbContext(DbContextOptions<PmsDbContext> options)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasIndex(x => new { x.Date, x.IsAvailable });
+        });
+
+        modelBuilder.Entity<Channel>(entity =>
+        {
+            entity.ToTable("channels");
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Id)
+                .HasColumnName("id")
+                .UseIdentityByDefaultColumn()
+                .HasIdentityOptions(startValue: 1000);
+
+            entity.Property(x => x.Code)
+                .HasColumnName("code")
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.HasIndex(x => x.Code)
+                .IsUnique();
+
+            entity.Property(x => x.Name)
+                .HasColumnName("name")
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(x => x.IsEnabled)
+                .HasColumnName("is_enabled");
+
+            entity.Property(x => x.CreatedAt)
+                .HasColumnName("created_at");
+
+            entity.Property(x => x.UpdatedAt)
+                .HasColumnName("updated_at");
+
+            var seededAt = new DateTime(
+                2026, 9, 29, 0, 0, 0, DateTimeKind.Utc);
+
+            entity.HasData(
+                new Channel
+                {
+                    Id = 1,
+                    Code = "ota-a",
+                    Name = "OTA A",
+                    IsEnabled = true,
+                    CreatedAt = seededAt,
+                    UpdatedAt = seededAt
+                },
+                new Channel
+                {
+                    Id = 2,
+                    Code = "ota-b",
+                    Name = "OTA B",
+                    IsEnabled = true,
+                    CreatedAt = seededAt,
+                    UpdatedAt = seededAt
+                },
+                new Channel
+                {
+                    Id = 3,
+                    Code = "ota-replace-simulator",
+                    Name = "OTA Replace Simulator",
+                    IsEnabled = true,
+                    CreatedAt = seededAt,
+                    UpdatedAt = seededAt
+                });
+        });
+
+        modelBuilder.Entity<Publication>(entity =>
+        {
+            entity.ToTable("publications");
+            entity.HasKey(x => new { x.PropertyId, x.ChannelId });
+
+            entity.Property(x => x.PropertyId)
+                .HasColumnName("property_id")
+                .HasMaxLength(50);
+
+            entity.Property(x => x.ChannelId)
+                .HasColumnName("channel_id");
+
+            entity.Property(x => x.ExternalPropertyId)
+                .HasColumnName("external_property_id")
+                .HasMaxLength(100);
+
+            entity.Property(x => x.Published)
+                .HasColumnName("published");
+
+            entity.Property(x => x.CreatedAt)
+                .HasColumnName("created_at");
+
+            entity.Property(x => x.UpdatedAt)
+                .HasColumnName("updated_at");
+
+            entity.HasOne<Property>()
+                .WithMany()
+                .HasForeignKey(x => x.PropertyId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne<Channel>()
+                .WithMany()
+                .HasForeignKey(x => x.ChannelId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(x => new
+                { x.ChannelId, x.ExternalPropertyId })
+                .IsUnique();
+
+            entity.HasIndex(x => new { x.ChannelId, x.Published });
         });
     }
 }

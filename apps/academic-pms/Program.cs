@@ -11,6 +11,8 @@ var connectionString = builder.Configuration.GetConnectionString("PmsDb") ?? thr
 builder.Services.AddDbContext<PmsDbContext>( options => options.UseNpgsql(connectionString));
 
 builder.Services.AddScoped<PropertyService>();
+builder.Services.AddScoped<ChannelService>();
+builder.Services.AddScoped<PublicationService>();
 builder.Services.AddScoped<InsideAirbnbCsvReader>();
 builder.Services.AddScoped<InsideAirbnbImportService>();
 builder.Services.AddScoped<InsideAirbnbCalendarCsvReader>();
