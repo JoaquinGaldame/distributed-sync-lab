@@ -1,7 +1,7 @@
 -- Catálogos propios de OTA A.
 -- No carga propiedades ni copia datos del PMS.
 
-INSERT INTO property_types (code, name) VALUES
+INSERT INTO property_types (id, code) VALUES
     (1, 'APARTMENT'),
     (2, 'BED_AND_BREAKFAST'),
     (3, 'CABIN_OR_BUNGALOW'),
@@ -66,11 +66,11 @@ INSERT INTO unit_types (id, code) VALUES
     (14, 'Royal Suite'),
     (15, 'Bungalow/Chalet'),
     (16, 'Executive Room'),
-    (16, 'Holiday Home'),
-    (17, 'Mobile home/Tent'),
-    (18, 'Villa'),
-    (19, 'Mobile Home'),
-    (20, 'Tent');
+    (17, 'Holiday Home'),
+    (18, 'Mobile home/Tent'),
+    (19, 'Villa'),
+    (20, 'Mobile Home'),
+    (21, 'Tent');
 
 INSERT INTO languages(id, code, name) VALUES
     (1, 'af', 'Afrikaans'),
@@ -130,6 +130,51 @@ INSERT INTO languages(id, code, name) VALUES
     (55, 'jv', 'Javanese');
 
 
+INSERT INTO currency_types (id, code) VALUES
+    (1, 'AFN'),
+    (2, 'USD'),
+    (3, 'ARS'),
+    (4, 'BGN'),
+    (5, 'EUR'),
+    (6, 'XOF'),
+    (7, 'BRL'),
+    (8, 'CLP'),
+    (9, 'COP'),
+    (10, 'CZK'),
+    (11, 'GEL'),
+    (12, 'GTQ'),
+    (13, 'HUF'),
+    (14, 'IDR'),
+    (15, 'ILS'),
+    (16, 'ISK'),
+    (17, 'MAD'),
+    (18, 'MDL'),
+    (19, 'HKD'),
+    (20, 'MOP'),
+    (21, 'MXN'),
+    (22, 'MYR'),
+    (23, 'MZN'),
+    (24, 'NGN'),
+    (25, 'PKR'),
+    (26, 'RON'),
+    (27, 'SLL'),
+    (28, 'THB'),
+    (29, 'TND'),
+    (30, 'TRY'),
+    (31, 'UAH'),
+    (32, 'UZS'),
+    (33, 'VND'),
+    (34, 'WST');
+
+
+INSERT INTO profiles_types (id, code, name, required)
+OVERRIDING SYSTEM VALUE
+VALUES
+    (1, 'general', 'Primary point of contact for the property', true),
+    (2, 'reservations', 'Contact for reservations', false),
+    (3, 'invoices', 'Contact for accounts payable', false),
+    (4, 'availability', 'Contact for questions about availability', false),
+    (5, 'central_reservations', 'Contact for central reservations. Applies to properties that manage reservations from another location', false);
 
 INSERT INTO facilities (id, code, name) VALUES
     (1, 'PARKING', 'Parking'),
@@ -373,7 +418,7 @@ INSERT INTO facilities (id, code, name) VALUES
     (239, 'LUNCH_AVAILABLE', 'Lunch Available'),
     (240, 'DINNER_AVAILABLE', 'Dinner Available');
 
-INSERT INTO rooms_facilities (id, code, name) VALUES
+INSERT INTO unit_facility_types (id, code, name) VALUES
     (1, 'COFFEETEA_MAKER', 'Coffee and Tea Maker'),
     (2, 'INTERNET_FACILITIES', 'Internet Facilities'),
     (3, 'MINIBAR', 'Minibar'),
@@ -568,16 +613,38 @@ INSERT INTO rooms_facilities (id, code, name) VALUES
     (192, 'HAND_SANITIZER_IN_ROOM', 'Hand Sanitizer In Room');
 
 
-INSERT INTO bathroom_configurations (id, code, scope) VALUES
-    (1, 'DOWN_THE_HALL', 'PRIVATE'),
-    (2, 'ENSUITE', 'PRIVATE'),
-    (3, 'INSIDE_THE_UNIT', 'PRIVATE'),
-    (4, 'IN_THE_HALLWAY', 'PRIVATE'),
-    (5, 'NEXT_DOOR', 'PRIVATE'),
-    (6, 'OPPOSITE_THE_ROOM', 'PRIVATE'),
-    (7, 'OTHER', 'PRIVATE'),
-    (8, 'DOWN_THE_HALL', 'SHARED'),
-    (9, 'IN_THE_HALLWAY', 'SHARED'),
-    (10, 'NEXT_DOOR', 'SHARED'),
-    (11, 'OPPOSITE_THE_ROOM', 'SHARED'),
-    (12, 'OTHER', 'SHARED');
+INSERT INTO bathroom_configurations (id, code) VALUES
+    (1, 'DOWN_THE_HALL'),
+    (2, 'ENSUITE'),
+    (3, 'INSIDE_THE_UNIT'),
+    (4, 'IN_THE_HALLWAY'),
+    (5, 'NEXT_DOOR'),
+    (6, 'OPPOSITE_THE_ROOM'),
+    (7, 'OTHER');
+
+
+-- Sincroniza las secuencias luego de cargar identificadores explícitos.
+
+SELECT setval(pg_get_serial_sequence('property_types', 'id'), MAX(id), true)
+FROM property_types;
+
+SELECT setval(pg_get_serial_sequence('unit_types', 'id'), MAX(id), true)
+FROM unit_types;
+
+SELECT setval(pg_get_serial_sequence('languages', 'id'), MAX(id), true)
+FROM languages;
+
+SELECT setval(pg_get_serial_sequence('currency_types', 'id'), MAX(id), true)
+FROM currency_types;
+
+SELECT setval(pg_get_serial_sequence('profiles_types', 'id'), MAX(id), true)
+FROM profiles_types;
+
+SELECT setval(pg_get_serial_sequence('facilities', 'id'), MAX(id), true)
+FROM facilities;
+
+SELECT setval(pg_get_serial_sequence('unit_facility_types', 'id'), MAX(id), true)
+FROM unit_facility_types;
+
+SELECT setval(pg_get_serial_sequence('bathroom_configurations', 'id'), MAX(id), true)
+FROM bathroom_configurations;
