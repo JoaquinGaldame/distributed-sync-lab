@@ -1,0 +1,6 @@
+@OtaASimulator_HostAddress = http://localhost:5160
+
+GET {{OtaASimulator_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

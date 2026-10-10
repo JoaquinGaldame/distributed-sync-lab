@@ -623,6 +623,62 @@ INSERT INTO bathroom_configurations (id, code) VALUES
     (7, 'OTHER');
 
 
+
+
+INSERT INTO cancellation_policies (
+    code,
+    name,
+    free_until_days_before,
+    penalty_percent
+) VALUES
+-- PENALIZACIÓN INMEDIATA
+('100',   'Non-refundable - 100%', NULL, 100.00),
+('102', 'Non-refundable - 50%',  NULL,  50.00),
+-- CANCELACIÓN GRATUITA + PENALIZACIÓN DEL 100%
+('203',  'Free until 1 day - 100% penalty',    1, 100.00),
+('204',  'Free until 2 days - 100% penalty',   2, 100.00),
+('205',  'Free until 3 days - 100% penalty',   3, 100.00),
+('206', 'Free until 4 days - 100% penalty',   4, 100.00),
+('207',  'Free until 5 days - 100% penalty',   5, 100.00),
+('208', 'Free until 6 days - 100% penalty',   6, 100.00),
+('209',  'Free until 7 days - 100% penalty',   7, 100.00),
+('210', 'Free until 8 days - 100% penalty',   8, 100.00),
+('211', 'Free until 10 days - 100% penalty', 10, 100.00),
+('212',  'Free until 14 days - 100% penalty', 14, 100.00),
+('213', 'Free until 15 days - 100% penalty', 15, 100.00),
+('214', 'Free until 20 days - 100% penalty', 20, 100.00),
+('215', 'Free until 21 days - 100% penalty', 21, 100.00),
+('216',  'Free until 28 days - 100% penalty', 28, 100.00),
+('217',  'Free until 30 days - 100% penalty', 30, 100.00),
+('218', 'Free until 31 days - 100% penalty', 31, 100.00),
+('219',  'Free until 42 days - 100% penalty', 42, 100.00),
+('220', 'Free until 45 days - 100% penalty', 45, 100.00),
+('221', 'Free until 60 days - 100% penalty', 60, 100.00),
+('222', 'Free until 90 days - 100% penalty', 90, 100.00),
+-- CANCELACIÓN GRATUITA + PENALIZACIÓN DEL 50%
+('350',  'Free until 1 day - 50% penalty',    1, 50.00),
+('351',  'Free until 2 days - 50% penalty',   2, 50.00),
+('352',  'Free until 3 days - 50% penalty',   3, 50.00),
+('353',  'Free until 5 days - 50% penalty',   5, 50.00),
+('354', 'Free until 6 days - 50% penalty',   6, 50.00),
+('355',  'Free until 7 days - 50% penalty',   7, 50.00),
+('356', 'Free until 8 days - 50% penalty',   8, 50.00),
+('357', 'Free until 10 days - 50% penalty', 10, 50.00),
+('358',  'Free until 14 days - 50% penalty', 14, 50.00),
+('359', 'Free until 15 days - 50% penalty', 15, 50.00),
+('360', 'Free until 20 days - 50% penalty', 20, 50.00),
+('361', 'Free until 21 days - 50% penalty', 21, 50.00),
+('362', 'Free until 28 days - 50% penalty', 28, 50.00),
+('363',  'Free until 30 days - 50% penalty', 30, 50.00),
+('364', 'Free until 31 days - 50% penalty', 31, 50.00),
+('365', 'Free until 42 days - 50% penalty', 42, 50.00),
+('366', 'Free until 45 days - 50% penalty', 45, 50.00),
+('367', 'Free until 60 days - 50% penalty', 60, 50.00),
+('368', 'Free until 90 days - 50% penalty', 90, 50.00),
+-- CANCELACIÓN TOTALMENTE GRATUITA
+('400', 'Fully flexible - Free cancellation', NULL, 0.00);
+
+
 -- Sincroniza las secuencias luego de cargar identificadores explícitos.
 
 SELECT setval(pg_get_serial_sequence('property_types', 'id'), MAX(id), true)

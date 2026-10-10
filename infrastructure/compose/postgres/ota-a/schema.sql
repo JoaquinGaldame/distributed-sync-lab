@@ -134,7 +134,7 @@ CREATE TABLE units (
     maximum_occupancy integer NOT NULL CHECK (maximum_occupancy > 0),
     maximum_adults integer NOT NULL CHECK (maximum_adults > 0),
     maximum_children integer NOT NULL DEFAULT 0 CHECK (maximum_children >= 0),
-    status varchar(20) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
+    is_active boolean NOT NULL DEFAULT true,
     created_at timestamptz NOT NULL DEFAULT now(),
     updated_at timestamptz NOT NULL DEFAULT now(),
     UNIQUE (property_id, id),
@@ -179,15 +179,11 @@ CREATE TABLE stay_policies (
 -- Fuera del plazo gratuito se aplica penalty_percent.
 
 CREATE TABLE cancellation_policies (
-    id bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    property_id bigint NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-    external_code varchar(60) NOT NULL,
+    id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    code varchar(60) NOT NULL UNIQUE,
     name varchar(150) NOT NULL CHECK (length(trim(name)) > 0),
     free_until_days_before integer CHECK (free_until_days_before >= 0),
-    penalty_percent numeric(5,2) NOT NULL CHECK (penalty_percent BETWEEN 0 AND 100),
-    no_show_penalty_percent numeric(5,2) NOT NULL CHECK (no_show_penalty_percent BETWEEN 0 AND 100),
-    UNIQUE (property_id, id),
-    UNIQUE (property_id, external_code)
+    penalty_percent numeric(5,2) NOT NULL CHECK (penalty_percent BETWEEN 0 AND 100)
 );
 
 -- 5. CARGOS
@@ -224,17 +220,13 @@ CREATE TABLE rate_plans (
     unit_id bigint NOT NULL,
     external_code varchar(60) NOT NULL,
     name varchar(150) NOT NULL CHECK (length(trim(name)) > 0),
-    cancellation_policy_id bigint NOT NULL,
+    cancellation_policy_id integer NOT NULL REFERENCES cancellation_policies(id),
     minimum_nights integer NOT NULL DEFAULT 1 CHECK (minimum_nights > 0),
     maximum_nights integer,
-    status varchar(20) NOT NULL DEFAULT 'active'
-        CHECK (status IN ('active', 'inactive')),
+    is_active boolean NOT NULL DEFAULT true,
     created_at timestamptz NOT NULL DEFAULT now(),
     updated_at timestamptz NOT NULL DEFAULT now(),
-    FOREIGN KEY (property_id, unit_id)
-        REFERENCES units(property_id, id) ON DELETE CASCADE,
-    FOREIGN KEY (property_id, cancellation_policy_id)
-        REFERENCES cancellation_policies(property_id, id),
+    FOREIGN KEY (property_id, unit_id) REFERENCES units(property_id, id) ON DELETE CASCADE,
     UNIQUE (property_id, external_code),
     CHECK (
         maximum_nights IS NULL
