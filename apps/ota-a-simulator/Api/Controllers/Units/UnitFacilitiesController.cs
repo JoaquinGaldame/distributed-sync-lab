@@ -9,6 +9,10 @@ namespace OtaASimulator.Controllers;
 public sealed class UnitFacilitiesController(UnitFacilityService service) : ControllerBase
 {
     [HttpPut]
-    public async Task<ActionResult<IReadOnlyList<int>>> Replace(long propertyId, long unitId, [FromBody, Required] List<int> request, CancellationToken ct) =>
-        Ok(await service.ReplaceAsync(propertyId, unitId, request, ct));
+    public async Task<ActionResult<IReadOnlyList<UnitFacilityResponse>>> Configure(
+        long propertyId,
+        long unitId,
+        [FromBody, Required] List<UnitFacilityRequest> request,
+        CancellationToken ct) =>
+        Ok(await service.ConfigureAsync(propertyId, unitId, request, ct));
 }

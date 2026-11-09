@@ -10,6 +10,97 @@ El entorno local utiliza una instancia de PostgreSQL con tres bases de datos. Ac
 
 La existencia de una base no implica que ya tenga tablas: el esquema de cada destino se incorporará al implementar su funcionalidad. Los componentes internos comparten deliberadamente la fuente `rental_management`; no deben usar como fuente las bases de los simuladores OTA.
 
+Todos los comandos siguientes se ejecutan desde **CMD de Windows**, en la raíz del repositorio:
+
+```cmd
+cd /d D:\Proyectos\distributed-sync-lab
+```
+
+Todos los comandos siguientes se ejecutan desde **CMD de Windows**, en la raíz del repositorio:
+
+```cmd
+cd /d D:\Proyectos\distributed-sync-lab
+```
+
+## Levantar el entorno
+
+Levantar los servicios y esperar a que estén disponibles:
+
+```cmd
+docker compose up -d --wait
+```
+
+Comprobar su estado:
+
+```cmd
+docker compose ps
+```
+
+Consultar los últimos logs de PostgreSQL:
+
+```cmd
+docker compose logs --tail=100 postgres
+```
+
+## Detener el entorno conservando los datos
+
+```cmd
+docker compose down
+```
+
+Los datos permanecen en el volumen. Para volver a levantar el entorno:
+
+```cmd
+docker compose up -d --wait
+```
+
+## Reiniciar desde cero eliminando los volúmenes
+
+**Este procedimiento elimina los datos de los volúmenes administrados por el proyecto de Compose, incluidas las bases y sus tablas.**
+
+```cmd
+docker compose down --volumes
+docker compose up -d --wait
+```
+
+Al iniciar PostgreSQL con un volumen vacío, se ejecuta nuevamente `init-databases.sql`, que crea los usuarios y las bases.
+
+Modificar `init-databases.sql` y reiniciar conservando el volumen **no vuelve a ejecutar ese script**.
+
+Después de eliminar el volumen, hay que volver a aplicar los esquemas y cargar los datos de las aplicaciones.
+
+### Eliminar un volumen obsoleto
+
+Si un volumen antiguo ya no está declarado en el Compose actual, puede permanecer aunque ejecutes `down --volumes`.
+
+Detener el entorno y listar los volúmenes:
+
+```cmd
+docker compose down
+docker volume ls
+```
+
+Inspeccionar el volumen antiguo:
+
+```cmd
+docker volume inspect NOMBRE_REAL_DEL_VOLUMEN
+```
+
+Eliminarlo:
+
+```cmd
+docker volume rm NOMBRE_REAL_DEL_VOLUMEN
+```
+
+Volver a levantar el entorno:
+
+```cmd
+docker compose up -d --wait
+```
+
+Reemplazá `NOMBRE_REAL_DEL_VOLUMEN` por el nombre exacto mostrado por Docker. Si Docker indica que está en uso, todavía existe un contenedor que lo utiliza.
+
+
 ## Acceder a las bases desde Docker
 
 Desde la raíz de `distributed-sync-lab`, comprobá que PostgreSQL esté activo:

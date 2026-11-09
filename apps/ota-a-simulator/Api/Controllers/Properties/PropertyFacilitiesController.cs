@@ -9,6 +9,9 @@ namespace OtaASimulator.Controllers;
 public sealed class PropertyFacilitiesController(PropertyFacilityService service) : ControllerBase
 {
     [HttpPut]
-    public async Task<ActionResult<IReadOnlyList<string>>> Replace(long propertyId, [FromBody, Required] List<string> request, CancellationToken ct) =>
-        Ok(await service.ReplaceAsync(propertyId, request, ct));
+    public async Task<ActionResult<IReadOnlyList<PropertyFacilityResponse>>> Configure(
+        long propertyId,
+        [FromBody, Required] List<PropertyFacilityRequest> request,
+        CancellationToken ct) =>
+        Ok(await service.ConfigureAsync(propertyId, request, ct));
 }

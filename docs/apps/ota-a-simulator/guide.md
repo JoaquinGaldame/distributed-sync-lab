@@ -26,25 +26,9 @@ docker info
 
 ## 1. Inicializar el proyecto .NET
 
-> Esta sección documenta la creación original de la aplicación. No ejecutes `dotnet new` ni `dotnet add` después de clonar el repositorio: el proyecto y sus referencias ya están versionados.
+> Esta sección documenta la clonación el repositorio: el proyecto y sus referencias ya están versionados.
 
-Para crear el proyecto desde cero:
-
-```cmd
-dotnet new webapi --name OtaASimulator --output apps\ota-a-simulator --framework net10.0 --use-controllers
-```
-
-Agregar el proveedor de Entity Framework Core para PostgreSQL:
-
-```cmd
-dotnet add apps\ota-a-simulator\OtaASimulator.csproj package Npgsql.EntityFrameworkCore.PostgreSQL --version 10.0.0
-```
-
-Agregar la versión directa de `Microsoft.OpenApi` utilizada por el proyecto:
-
-```cmd
-dotnet add apps\ota-a-simulator\OtaASimulator.csproj package Microsoft.OpenApi --version 2.7.5
-```
+Para Iniciar el proyecto desde cero:
 
 En un repositorio recién clonado solamente es necesario restaurar y compilar:
 
@@ -161,6 +145,12 @@ docker compose exec postgres psql -U ota_a_simulator_user -d ota_a_simulator_db 
 Si las tablas ya existen o los catálogos ya contienen registros, no vuelvas a aplicar estos scripts. Una ejecución posterior fallará por objetos o claves duplicadas.
 
 ## 4. Ejecutar OTA A Simulator
+**Path raíz:** D:\Proyectos\Distributed-Syn-Platform\distributed-sync-lab>
+
+Compilar proyecto desde path raíz:
+```cmd
+dotnet build apps\ota-a-simulator\OtaASimulator.csproj   
+```
 
 La configuración local utiliza esta conexión:
 
@@ -168,7 +158,7 @@ La configuración local utiliza esta conexión:
 Host=localhost;Port=5433;Database=ota_a_simulator_db;Username=ota_a_simulator_user
 ```
 
-Iniciá la API:
+Iniciá la API desde path raíz:
 
 ```cmd
 dotnet run --project apps\ota-a-simulator\OtaASimulator.csproj --urls http://localhost:5160

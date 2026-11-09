@@ -22,7 +22,12 @@ public sealed class UnitService(OtaADbContext db, ResourceGuard guard)
     {
         await using var tx = await db.Database.BeginTransactionAsync(System.Data.IsolationLevel.RepeatableRead, ct);
         var entity = await guard.UnitAsync(propertyId, unitId, ct);
-        var facilities = await db.UnitFacilities.AsNoTracking().Where(x => x.UnitId == unitId).OrderBy(x => x.UnitFacilityTypeId).Select(x => x.UnitFacilityTypeId).ToListAsync(ct);
+        var facilities = await db.UnitFacilities
+            .AsNoTracking()
+            .Where(x => x.UnitId == unitId)
+            .OrderBy(x => x.UnitFacilityTypeId)
+            .Select(x => new UnitFacilityResponse(x.UnitFacilityTypeId, x.UnitFacilityType.Code))
+            .ToListAsync(ct);
         var bathrooms = await db.UnitBathrooms.AsNoTracking().Where(x => x.UnitId == unitId).OrderBy(x => x.BathroomConfigurationId).ThenBy(x => x.Scope).ToListAsync(ct);
         await tx.CommitAsync(ct);
         return new(UnitMapper.ToResponse(entity), facilities, bathrooms.Select(BathroomMapper.ToResponse).ToArray());

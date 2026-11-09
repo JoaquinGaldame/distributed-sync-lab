@@ -11,16 +11,15 @@ public sealed class PropertyFacilityConfiguration
     public void Configure(EntityTypeBuilder<PropertyFacility> builder)
     {
         builder.ToTable("property_facilities", "public");
-        builder.HasKey(x => new { x.PropertyId, x.FacilityCode });
+        builder.HasKey(x => new { x.PropertyId, x.FacilityId });
 
         builder.Property(x => x.PropertyId)
             .HasColumnName("property_id")
             .IsRequired()
             .ValueGeneratedNever();
 
-        builder.Property(x => x.FacilityCode)
-            .HasColumnName("facility_code")
-            .HasMaxLength(100)
+        builder.Property(x => x.FacilityId)
+            .HasColumnName("facility_id")
             .IsRequired()
             .ValueGeneratedNever();
 
@@ -31,8 +30,7 @@ public sealed class PropertyFacilityConfiguration
 
         builder.HasOne(x => x.Facility)
             .WithMany()
-            .HasForeignKey(x => x.FacilityCode)
-            .HasPrincipalKey(x => x.Code)
+            .HasForeignKey(x => x.FacilityId)
             .OnDelete(DeleteBehavior.NoAction);
     }
 }

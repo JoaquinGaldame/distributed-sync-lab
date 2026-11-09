@@ -9,3 +9,49 @@ GET {{OtaASimulator_HostAddress}}/catalogs/property-types
 Accept: application/json
 
 ###
+
+GET {{OtaASimulator_HostAddress}}/properties/1
+Accept: application/json
+
+###
+
+PUT {{OtaASimulator_HostAddress}}/properties/1/facilities
+Content-Type: application/json
+
+[
+  {
+    "facilityId": 1,
+    "status": "Present"
+  },
+  {
+    "facilityId": 2,
+    "status": "Present"
+  }
+]
+
+###
+
+GET {{OtaASimulator_HostAddress}}/properties/1/units/1
+Accept: application/json
+
+###
+
+PUT {{OtaASimulator_HostAddress}}/properties/1/units/1/facilities
+Content-Type: application/json
+
+[
+  {
+    "unitFacilityTypeId": 8,
+    "status": "PRESENT"
+  },
+  {
+    "unitFacilityTypeId": 11,
+    "status": "PRESENT"
+  },
+  {
+    "unitFacilityTypeId": 15,
+    "status": "MISSING"
+  }
+]
+
+###

@@ -5,6 +5,6 @@ public sealed record PropertyDetailResponse(
     LocationResponse? Location,
     IReadOnlyList<ContactResponse> Contacts,
     IReadOnlyList<DescriptionResponse> Descriptions,
-    IReadOnlyList<string> FacilityCodes,
+    IReadOnlyList<PropertyFacilityResponse> Facilities,
     StayPolicyResponse? StayPolicy,
     IReadOnlyList<ChargeResponse> Charges);

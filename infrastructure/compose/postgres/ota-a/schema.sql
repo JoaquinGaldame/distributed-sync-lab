@@ -117,8 +117,8 @@ CREATE TABLE property_descriptions (
 
 CREATE TABLE property_facilities (
     property_id bigint NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
-    facility_code varchar(100) NOT NULL REFERENCES facilities(code),
-    PRIMARY KEY (property_id, facility_code)
+    facility_id integer NOT NULL REFERENCES facilities(id),
+    PRIMARY KEY (property_id, facility_id)
 );
 
 

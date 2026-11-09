@@ -48,7 +48,12 @@ public sealed class PropertyService(OtaADbContext db, ResourceGuard guard)
         var location = await db.PropertyLocations.AsNoTracking().SingleOrDefaultAsync(x => x.PropertyId == propertyId, ct);
         var contacts = await db.PropertyContacts.AsNoTracking().Where(x => x.PropertyId == propertyId).OrderBy(x => x.ProfileTypeId).ToListAsync(ct);
         var descriptions = await db.PropertyDescriptions.AsNoTracking().Where(x => x.PropertyId == propertyId).OrderBy(x => x.LanguageId).ToListAsync(ct);
-        var facilities = await db.PropertyFacilities.AsNoTracking().Where(x => x.PropertyId == propertyId).OrderBy(x => x.FacilityCode).Select(x => x.FacilityCode).ToListAsync(ct);
+        var facilities = await db.PropertyFacilities
+            .AsNoTracking()
+            .Where(x => x.PropertyId == propertyId)
+            .OrderBy(x => x.FacilityId)
+            .Select(x => new PropertyFacilityResponse(x.FacilityId, x.Facility.Code))
+            .ToListAsync(ct);
         var policy = await db.StayPolicies.AsNoTracking().SingleOrDefaultAsync(x => x.PropertyId == propertyId, ct);
         var charges = await db.PropertyCharges.AsNoTracking().Where(x => x.PropertyId == propertyId).OrderBy(x => x.Code).ToListAsync(ct);
         await tx.CommitAsync(ct);
