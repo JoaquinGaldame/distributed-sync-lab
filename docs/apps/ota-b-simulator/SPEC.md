@@ -134,7 +134,7 @@ Usar el mismo envelope para controlar esa variable experimental:
   "data": {},
   "warning": "",
   "message": "Operación completada correctamente.",
-  "error": null
+  "errors": []
 }
 ```
 
@@ -170,7 +170,7 @@ envelope. No se expone escritura de catálogos. Health y errores también usan e
 | PUT | /listings/{listingId}/amenities | Reemplazo completo de códigos |
 | PUT | /listings/{listingId}/house-rules | Reemplazo/upsert de reglas de estancia |
 | PUT | /listings/{listingId}/booking-rules | Reemplazo/upsert de condiciones comerciales |
-| PUT | /listings/{listingId}/pricing | Reemplazo/upsert de tarifa base |
+| PUT | /listings/{listingId}/base-rate | Reemplazo/upsert de tarifa nocturna base |
 | PUT | /listings/{listingId}/fees | Reemplazo completo de cargos por code |
 | PUT | /listings/{listingId}/prices | Aplicar excepciones de precio por intervalos |
 | DELETE | /listings/{listingId}/prices?from=...&until=... | Quitar excepciones; reaparece la tarifa base si existe |
@@ -254,7 +254,7 @@ PUT /listings/{listingId}/rooms/{roomId}/beds
 ### Tarifa base
 
 ```http
-PUT /listings/{listingId}/pricing
+PUT /listings/{listingId}/base-rate
 ```
 
 ```json
@@ -377,7 +377,7 @@ Ejemplo después de configurar la tarifa base y aplicar ambos requests de la sec
   },
   "warning": "",
   "message": "Consulta completada correctamente.",
-  "error": null
+  "errors": []
 }
 ```
 

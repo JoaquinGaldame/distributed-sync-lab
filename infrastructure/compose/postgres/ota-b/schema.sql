@@ -10,20 +10,20 @@
 
 CREATE TABLE public.currencies (
     id serial PRIMARY KEY,
-    code varchar(3) PRIMARY KEY CHECK (code ~ '^[A-Z]{3}$'),
+    code varchar(3) NOT NULL UNIQUE CHECK (code ~ '^[A-Z]{3}$'),
     name varchar(100) NOT NULL CHECK (length(btrim(name)) > 0),
     decimal_places smallint NOT NULL CHECK (decimal_places BETWEEN 0 AND 4)
 );
 
 CREATE TABLE public.languages (
     id serial PRIMARY KEY,
-    code varchar(15) PRIMARY KEY CHECK (length(btrim(code)) > 0),
+    code varchar(15) NOT NULL UNIQUE CHECK (length(btrim(code)) > 0),
     name varchar(100) NOT NULL CHECK (length(btrim(name)) > 0)
 );
 
 CREATE TABLE public.listing_categories (
     id serial PRIMARY KEY,
-    code varchar(40) PRIMARY KEY,
+    code varchar(40) NOT NULL UNIQUE,
     name varchar(100) NOT NULL CHECK (length(btrim(name)) > 0)
 );
 
@@ -39,7 +39,7 @@ CREATE TABLE public.amenity_groups (
 
 CREATE TABLE public.amenities (
     id serial PRIMARY KEY,
-    code varchar(80) PRIMARY KEY,
+    code varchar(80) NOT NULL UNIQUE,
     group_code varchar(30) NOT NULL REFERENCES public.amenity_groups(code),
     name varchar(150) NOT NULL CHECK (length(btrim(name)) > 0)
 );
@@ -51,19 +51,19 @@ CREATE TABLE public.contact_roles (
 
 CREATE TABLE public.listing_statuses (
     id serial PRIMARY KEY,
-    code varchar(20) PRIMARY KEY,
+    code varchar(20) NOT NULL UNIQUE,
     name varchar(100) NOT NULL CHECK (length(btrim(name)) > 0)
 );
 
 CREATE TABLE public.room_types (
     id serial PRIMARY KEY,
-    code varchar(40) PRIMARY KEY,
+    code varchar(40) NOT NULL UNIQUE,
     name varchar(100) NOT NULL CHECK (length(btrim(name)) > 0)
 );
 
 CREATE TABLE public.bed_types (
     id serial PRIMARY KEY,
-    code varchar(40) PRIMARY KEY,
+    code varchar(40) NOT NULL UNIQUE,
     name varchar(100) NOT NULL CHECK (length(btrim(name)) > 0)
 );
 
@@ -129,7 +129,7 @@ CREATE TABLE public.room_beds (
     room_id uuid NOT NULL REFERENCES public.rooms(id) ON DELETE CASCADE,
     bed_type_id integer NOT NULL REFERENCES public.bed_types(id),
     quantity integer NOT NULL CHECK (quantity > 0),
-    PRIMARY KEY (room_id, bed_type_code)
+    PRIMARY KEY (room_id, bed_type_id)
 );
 
 
@@ -168,13 +168,13 @@ CREATE TABLE public.listing_texts (
     description text NOT NULL CHECK (length(btrim(description)) > 0),
     created_at timestamptz NOT NULL DEFAULT now(),
     updated_at timestamptz NOT NULL DEFAULT now(),
-    PRIMARY KEY (listing_id, language_code)
+    PRIMARY KEY (listing_id, language_id)
 );
 
 CREATE TABLE public.listing_amenities (
     listing_id uuid NOT NULL REFERENCES public.listings(id) ON DELETE CASCADE,
     amenity_id integer NOT NULL REFERENCES public.amenities(id),
-    PRIMARY KEY (listing_id, amenity_code)
+    PRIMARY KEY (listing_id, amenity_id)
 );
 
 -- ============================================================================
@@ -287,7 +287,7 @@ DECLARE
     target_table text;
 BEGIN
     FOREACH target_table IN ARRAY ARRAY[
-        'listings', 'listing_locations', 'listing_contacts', 'listing_texts',
+        'listings', 'locations', 'contacts', 'listing_texts',
         'listing_house_rules', 'listing_booking_rules', 'listing_pricing',
         'listing_fees', 'listing_daily_prices', 'listing_daily_availability'
     ]
@@ -319,8 +319,8 @@ CREATE INDEX ix_room_beds_type ON public.room_beds(bed_type_id);
 CREATE INDEX ix_listings_category ON public.listings(category_id);
 CREATE INDEX ix_amenities_group ON public.amenities(group_code);
 CREATE INDEX ix_listing_booking_rules_cancellation ON public.listing_booking_rules(cancellation_term_code);
-CREATE INDEX ix_listing_contacts_role ON public.listing_contacts(role_code);
+CREATE INDEX ix_contacts_role ON public.contacts(role_code);
 CREATE INDEX ix_listing_texts_language ON public.listing_texts(language_id);
-CREATE INDEX ix_listing_amenities_code ON public.listing_amenities(amenity_code);
+CREATE INDEX ix_listing_amenities_amenity ON public.listing_amenities(amenity_id);
 CREATE INDEX ix_listing_fees_basis ON public.listing_fees(basis_code);
 CREATE INDEX ix_listing_daily_availability_state ON public.listing_daily_availability(state_code);

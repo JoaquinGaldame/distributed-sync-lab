@@ -1,0 +1,142 @@
+@host = http://localhost:5161
+@listingId = 00000000-0000-0000-0000-000000000000
+@roomId = 00000000-0000-0000-0000-000000000000
+
+### Health y metadata
+GET {{host}}/health
+###
+GET {{host}}/health/ready
+###
+GET {{host}}/metadata
+
+### Crear anuncio (copiar data.id en listingId)
+POST {{host}}/listings
+Content-Type: application/json
+
+{
+  "title": "Casa del Sol",
+  "categoryCode": "HOUSE",
+  "rentalModeCode": "ENTIRE_PLACE",
+  "currencyCode": "ARS",
+  "primaryLanguageCode": "es-AR",
+  "secondaryLanguageCode": null,
+  "timezone": "America/Argentina/San_Juan",
+  "statusCode": "DRAFT",
+  "maxGuests": 4
+}
+
+### Listado y detalle
+GET {{host}}/listings?page=1&pageSize=50
+###
+GET {{host}}/listings/{{listingId}}
+
+### Reemplazar datos generales
+PUT {{host}}/listings/{{listingId}}
+Content-Type: application/json
+
+{
+  "title": "Casa del Sol actualizada",
+  "categoryCode": "HOUSE",
+  "rentalModeCode": "ENTIRE_PLACE",
+  "currencyCode": "ARS",
+  "primaryLanguageCode": "es-AR",
+  "secondaryLanguageCode": null,
+  "timezone": "America/Argentina/San_Juan",
+  "statusCode": "LIVE",
+  "maxGuests": 4
+}
+
+### Ubicación
+PUT {{host}}/listings/{{listingId}}/location
+Content-Type: application/json
+
+{ "countryCode": "AR", "region": "San Juan", "city": "San Juan", "neighbourhood": null, "addressLine": "Calle 1 123", "postalCode": "J5400", "latitude": -31.5375, "longitude": -68.5364 }
+
+### Contactos
+PUT {{host}}/listings/{{listingId}}/contacts
+Content-Type: application/json
+
+[{ "roleCode": "HOST", "displayName": "Ana", "email": "ana@example.test", "phone": null, "languageCode": "es-AR" }]
+
+### Textos
+PUT {{host}}/listings/{{listingId}}/texts
+Content-Type: application/json
+
+[{ "languageCode": "es-AR", "summary": "Casa completa", "description": "Alojamiento tranquilo y luminoso." }]
+
+### Amenities
+PUT {{host}}/listings/{{listingId}}/amenities
+Content-Type: application/json
+
+["wifi", "parking", "kitchen", "air-conditioning"]
+
+### Crear espacio (copiar data.id en roomId)
+POST {{host}}/listings/{{listingId}}/rooms
+Content-Type: application/json
+
+{ "roomTypeCode": "BEDROOM", "name": "Dormitorio principal", "description": "Ventana al jardín.", "areaM2": 18.00, "floorNumber": 0, "isShared": false, "displayOrder": 1 }
+
+### Listar, consultar y reemplazar espacio
+GET {{host}}/listings/{{listingId}}/rooms
+###
+GET {{host}}/listings/{{listingId}}/rooms/{{roomId}}
+###
+PUT {{host}}/listings/{{listingId}}/rooms/{{roomId}}
+Content-Type: application/json
+
+{ "roomTypeCode": "BEDROOM", "name": "Dormitorio principal", "description": null, "areaM2": 19.00, "floorNumber": 0, "isShared": false, "displayOrder": 1 }
+
+### Reemplazar camas
+PUT {{host}}/listings/{{listingId}}/rooms/{{roomId}}/beds
+Content-Type: application/json
+
+[{ "bedTypeCode": "QUEEN", "quantity": 1 }]
+
+### Reglas de estancia
+PUT {{host}}/listings/{{listingId}}/house-rules
+Content-Type: application/json
+
+{ "checkInFrom": "15:00:00", "checkInUntil": "22:00:00", "checkOutFrom": "08:00:00", "checkOutUntil": "11:00:00", "minimumGuestAge": 18, "allowsChildren": true, "allowsPets": false, "allowsSmoking": false, "allowsParties": false, "additionalRules": null }
+
+### Condiciones comerciales
+PUT {{host}}/listings/{{listingId}}/booking-rules
+Content-Type: application/json
+
+{ "cancellationTermCode": "FREE_7D_THEN_REFUND_0", "minNights": 2, "maxNights": null }
+
+### Tarifa base
+PUT {{host}}/listings/{{listingId}}/base-rate
+Content-Type: application/json
+
+{ "baseNightlyAmountMinor": 9500000 }
+
+### Cargos
+PUT {{host}}/listings/{{listingId}}/fees
+Content-Type: application/json
+
+[{ "code": "cleaning", "name": "Limpieza", "basisCode": "STAY", "amountMinor": 120000, "percent": null, "isIncluded": false }]
+
+### Excepciones de precio
+PUT {{host}}/listings/{{listingId}}/prices
+Content-Type: application/json
+
+{ "periods": [{ "from": "2026-11-09", "until": "2026-11-11", "amountMinor": 9500000 }, { "from": "2026-11-11", "until": "2026-11-12", "amountMinor": 10500000 }] }
+
+### Disponibilidad independiente
+PUT {{host}}/listings/{{listingId}}/availability
+Content-Type: application/json
+
+{ "periods": [{ "from": "2026-11-09", "until": "2026-11-10", "stateCode": "OPEN" }, { "from": "2026-11-10", "until": "2026-11-11", "stateCode": "BLOCKED" }, { "from": "2026-11-11", "until": "2026-11-12", "stateCode": "BOOKED" }] }
+
+### Calendario diario completo
+GET {{host}}/listings/{{listingId}}/calendar?from=2026-11-09&until=2026-11-13
+
+### Eliminar sólo cada calendario
+DELETE {{host}}/listings/{{listingId}}/prices?from=2026-11-09&until=2026-11-12
+###
+DELETE {{host}}/listings/{{listingId}}/availability?from=2026-11-09&until=2026-11-12
+
+### Eliminar espacio y anuncio
+DELETE {{host}}/listings/{{listingId}}/rooms/{{roomId}}
+###
+DELETE {{host}}/listings/{{listingId}}
