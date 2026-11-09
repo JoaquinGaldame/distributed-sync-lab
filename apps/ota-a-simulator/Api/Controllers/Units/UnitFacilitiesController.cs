@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using OtaASimulator.Application.Units;
+using OtaASimulator.Models.Common;
 using OtaASimulator.Models.Units;
 namespace OtaASimulator.Controllers;
 
@@ -9,10 +10,12 @@ namespace OtaASimulator.Controllers;
 public sealed class UnitFacilitiesController(UnitFacilityService service) : ControllerBase
 {
     [HttpPut]
-    public async Task<ActionResult<IReadOnlyList<UnitFacilityResponse>>> Configure(
+    public async Task<ActionResult<ApiResponse<IReadOnlyList<UnitFacilityResponse>>>> Configure(
         long propertyId,
         long unitId,
         [FromBody, Required] List<UnitFacilityRequest> request,
         CancellationToken ct) =>
-        Ok(await service.ConfigureAsync(propertyId, unitId, request, ct));
+        Ok(ApiResponse<IReadOnlyList<UnitFacilityResponse>>.Success(
+            await service.ConfigureAsync(propertyId, unitId, request, ct),
+            "Facilities de la unidad actualizadas correctamente."));
 }

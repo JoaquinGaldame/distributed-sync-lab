@@ -237,14 +237,19 @@ CREATE TABLE rate_plans (
 -- 7. INVENTARIO DIARIO
 -- Se comparte entre todos los planes tarifarios de la unidad.
 -- Ausencia de registro significa inventario no configurado.
+-- closed: 0 = AVAILABLE, 1 = CLOSED, 2 = RESERVED.
 
 CREATE TABLE unit_inventory (
     unit_id bigint NOT NULL REFERENCES units(id) ON DELETE CASCADE,
     stay_date date NOT NULL,
     available_units integer NOT NULL CHECK (available_units >= 0),
-    closed boolean NOT NULL DEFAULT false,
+    closed smallint NOT NULL DEFAULT 0 CHECK (closed IN (0, 1, 2)),
     updated_at timestamptz NOT NULL DEFAULT now(),
-    PRIMARY KEY (unit_id, stay_date)
+    PRIMARY KEY (unit_id, stay_date),
+    CHECK (
+        (closed = 0 AND available_units > 0)
+        OR (closed IN (1, 2) AND available_units = 0)
+    )
 );
 
 -- 8. PRECIOS Y RESTRICCIONES DIARIOS
@@ -256,7 +261,6 @@ CREATE TABLE rate_calendar (
     rate_plan_id bigint NOT NULL REFERENCES rate_plans(id) ON DELETE CASCADE,
     stay_date date NOT NULL,
     nightly_price numeric(12,2) NOT NULL CHECK (nightly_price > 0),
-    closed boolean NOT NULL DEFAULT false,
     minimum_nights_override integer CHECK (minimum_nights_override > 0),
     maximum_nights_override integer CHECK (maximum_nights_override > 0),
     closed_to_arrival boolean NOT NULL DEFAULT false,

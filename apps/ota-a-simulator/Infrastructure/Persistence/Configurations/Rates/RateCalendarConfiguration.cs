@@ -39,12 +39,6 @@ public sealed class RateCalendarConfiguration
             .HasPrecision(12, 2)
             .IsRequired();
 
-        builder.Property(x => x.Closed)
-            .HasColumnName("closed")
-            .IsRequired()
-            .HasDefaultValue(false)
-            .HasSentinel(false);
-
         builder.Property(x => x.MinimumNightsOverride)
             .HasColumnName("minimum_nights_override")
             .IsRequired(false);

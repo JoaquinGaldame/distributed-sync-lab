@@ -6,6 +6,40 @@ Esta guía describe exclusivamente cómo inicializar y ejecutar `ota-a-simulator
 D:\Proyectos\Distributed-Syn-Platform\distributed-sync-lab
 ```
 
+## API de precios y disponibilidad
+
+La API administra precio e inventario diario mediante dos operaciones integradas:
+
+```text
+POST /availability/sync
+POST /availability/list
+```
+
+`/availability/sync` permite enviar por fecha solamente el precio, solamente la pareja `available_units` y `closed`, o ambos bloques. `closed` admite `0` (`AVAILABLE`), `1` (`CLOSED`) y `2` (`RESERVED`). Una fecha disponible requiere inventario mayor que cero; una fecha cerrada o reservada requiere inventario cero.
+
+`/availability/list` incluye `start_date` y utiliza `days` para delimitar la cantidad de fechas del período consultado. Devuelve solamente los días que tengan precio, disponibilidad o ambos. Si no existe ningún dato en todo el período, responde `409 Conflict` con el error `availability_not_configured`.
+
+Todas las respuestas HTTP utilizan el mismo envelope:
+
+```json
+{
+  "data": {},
+  "warning": "",
+  "message": "Operación completada correctamente.",
+  "error": null
+}
+```
+
+Los Rate Plans devuelven `cancellationPolicy` como un objeto con `id`, `code`, `name`, `freeUntilDaysBefore` y `penaltyPercent`. `cancellationPolicyId` se utiliza solamente en los requests de creación y actualización.
+
+Las eliminaciones jerárquicas disponibles son:
+
+```text
+DELETE /properties/{propertyId}
+DELETE /properties/{propertyId}/units/{unitId}
+DELETE /properties/{propertyId}/units/{unitId}/rate-plans/{ratePlanId}
+```
+
 ## Requisitos previos
 
 - .NET SDK 10.

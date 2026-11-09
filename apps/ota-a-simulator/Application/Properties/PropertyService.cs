@@ -40,6 +40,13 @@ public sealed class PropertyService(OtaADbContext db, ResourceGuard guard)
         return PropertyMapper.ToResponse(entity);
     }
 
+    public async Task DeleteAsync(long propertyId, CancellationToken ct)
+    {
+        var entity = await guard.PropertyAsync(propertyId, ct);
+        db.Properties.Remove(entity);
+        await db.SaveChangesAsync(ct);
+    }
+
     public async Task<PropertyDetailResponse> GetAsync(long propertyId, CancellationToken ct)
     {
         // Todas las secciones se leen desde la misma instantánea de PostgreSQL.

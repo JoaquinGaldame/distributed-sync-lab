@@ -6,7 +6,7 @@ public sealed record RatePlanResponse(
     long UnitId,
     string ExternalCode,
     string Name,
-    int CancellationPolicyId,
+    CancellationPolicyResponse CancellationPolicy,
     int MinimumNights,
     int? MaximumNights,
     bool IsActive,

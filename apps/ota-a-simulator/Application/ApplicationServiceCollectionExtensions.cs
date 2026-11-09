@@ -1,3 +1,4 @@
+using OtaASimulator.Application.Availability;
 using OtaASimulator.Application.Catalogs;
 using OtaASimulator.Application.Common;
 using OtaASimulator.Application.HealthCheck;
@@ -25,6 +26,7 @@ public static class ApplicationServiceCollectionExtensions
         services.AddScoped<UnitFacilityService>();
         services.AddScoped<BathroomService>();
         services.AddScoped<RatePlanService>();
+        services.AddScoped<AvailabilityService>();
 
         return services;
     }

@@ -12,14 +12,24 @@ public sealed class RatePlanService(OtaADbContext db, ResourceGuard guard)
     public async Task<PagedResponse<RatePlanResponse>> ListAsync(long propertyId, long unitId, int page, int pageSize, CancellationToken ct)
     {
         await guard.UnitAsync(propertyId, unitId, ct);
-        var query = db.RatePlans.AsNoTracking().Where(x => x.PropertyId == propertyId && x.UnitId == unitId);
+        var query = db.RatePlans
+            .AsNoTracking()
+            .Include(x => x.CancellationPolicy)
+            .Where(x => x.PropertyId == propertyId && x.UnitId == unitId);
         var total = await query.CountAsync(ct);
         var items = await query.OrderBy(x => x.Id).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(ct);
         return new(items.Select(RatePlanMapper.ToResponse).ToArray(), page, pageSize, total);
     }
 
-    public async Task<RatePlanResponse> GetAsync(long propertyId, long unitId, long ratePlanId, CancellationToken ct) =>
-        RatePlanMapper.ToResponse(await guard.RatePlanAsync(propertyId, unitId, ratePlanId, ct));
+    public async Task<RatePlanResponse> GetAsync(long propertyId, long unitId, long ratePlanId, CancellationToken ct)
+    {
+        var entity = await db.RatePlans
+            .AsNoTracking()
+            .Include(x => x.CancellationPolicy)
+            .SingleOrDefaultAsync(x => x.Id == ratePlanId && x.PropertyId == propertyId && x.UnitId == unitId, ct)
+            ?? throw ApiException.NotFound("Plan inexistente en la unidad y propiedad indicadas.");
+        return RatePlanMapper.ToResponse(entity);
+    }
 
     public async Task<RatePlanResponse> CreateAsync(long propertyId, long unitId, RatePlanRequest request, CancellationToken ct)
     {
@@ -29,6 +39,7 @@ public sealed class RatePlanService(OtaADbContext db, ResourceGuard guard)
         RatePlanMapper.Apply(request, entity);
         db.RatePlans.Add(entity);
         await db.SaveChangesAsync(ct);
+        await db.Entry(entity).Reference(x => x.CancellationPolicy).LoadAsync(ct);
         return RatePlanMapper.ToResponse(entity);
     }
 
@@ -44,8 +55,16 @@ public sealed class RatePlanService(OtaADbContext db, ResourceGuard guard)
             throw ApiException.Conflict("Las restricciones propuestas contradicen el calendario existente.");
         RatePlanMapper.Apply(request, entity);
         await db.SaveChangesAsync(ct);
+        await db.Entry(entity).Reference(x => x.CancellationPolicy).LoadAsync(ct);
         await tx.CommitAsync(ct);
         return RatePlanMapper.ToResponse(entity);
+    }
+
+    public async Task DeleteAsync(long propertyId, long unitId, long ratePlanId, CancellationToken ct)
+    {
+        var entity = await guard.RatePlanAsync(propertyId, unitId, ratePlanId, ct);
+        db.RatePlans.Remove(entity);
+        await db.SaveChangesAsync(ct);
     }
 
     private async Task ValidateAsync(long propertyId, long? ratePlanId, RatePlanRequest request, CancellationToken ct)

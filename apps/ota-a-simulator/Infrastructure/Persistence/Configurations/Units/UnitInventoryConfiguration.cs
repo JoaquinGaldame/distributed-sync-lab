@@ -14,6 +14,10 @@ public sealed class UnitInventoryConfiguration
         {
             table.HasCheckConstraint("ck_unit_inventory_1",
                 "available_units >= 0");
+            table.HasCheckConstraint("ck_unit_inventory_2",
+                "closed IN (0, 1, 2)");
+            table.HasCheckConstraint("ck_unit_inventory_3",
+                "(closed = 0 AND available_units > 0) OR (closed IN (1, 2) AND available_units = 0)");
         });
         builder.HasKey(x => new { x.UnitId, x.StayDate });
 
@@ -34,9 +38,11 @@ public sealed class UnitInventoryConfiguration
 
         builder.Property(x => x.Closed)
             .HasColumnName("closed")
+            .HasColumnType("smallint")
+            .HasConversion<short>()
             .IsRequired()
-            .HasDefaultValue(false)
-            .HasSentinel(false);
+            .HasDefaultValue(AvailabilityStatus.Available)
+            .HasSentinel(AvailabilityStatus.Available);
 
         builder.Property(x => x.UpdatedAt)
             .HasColumnName("updated_at")

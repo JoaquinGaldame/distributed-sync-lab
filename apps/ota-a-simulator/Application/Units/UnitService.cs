@@ -57,6 +57,13 @@ public sealed class UnitService(OtaADbContext db, ResourceGuard guard)
         return UnitMapper.ToResponse(entity);
     }
 
+    public async Task DeleteAsync(long propertyId, long unitId, CancellationToken ct)
+    {
+        var entity = await guard.UnitAsync(propertyId, unitId, ct);
+        db.Units.Remove(entity);
+        await db.SaveChangesAsync(ct);
+    }
+
     private async Task ValidateAsync(long propertyId, long? unitId, UnitRequest request, CancellationToken ct)
     {
         await CatalogGuard.ExistsAsync(db.UnitTypes, x => x.Id == request.UnitTypeId, "unitTypeId", ct);

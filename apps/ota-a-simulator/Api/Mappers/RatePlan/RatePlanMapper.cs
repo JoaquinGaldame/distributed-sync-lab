@@ -21,7 +21,12 @@ public static class RatePlanMapper
         entity.UnitId,
         entity.ExternalCode,
         entity.Name,
-        entity.CancellationPolicyId,
+        new CancellationPolicyResponse(
+            entity.CancellationPolicy.Id,
+            entity.CancellationPolicy.Code,
+            entity.CancellationPolicy.Name,
+            entity.CancellationPolicy.FreeUntilDaysBefore,
+            entity.CancellationPolicy.PenaltyPercent),
         entity.MinimumNights,
         entity.MaximumNights,
         entity.IsActive,

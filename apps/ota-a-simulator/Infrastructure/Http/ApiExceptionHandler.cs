@@ -17,12 +17,14 @@ public sealed class ApiExceptionHandler(ILogger<ApiExceptionHandler> logger) : I
         int status;
         string code;
         string detail;
+        string? responseMessage = null;
 
         if (exception is ApiException api)
         {
             status = api.StatusCode;
             code = api.Code;
             detail = api.Message;
+            responseMessage = api.ResponseMessage;
         }
         else if (postgres is not null && postgres.SqlState == PostgresErrorCodes.UniqueViolation)
         {
@@ -62,13 +64,13 @@ public sealed class ApiExceptionHandler(ILogger<ApiExceptionHandler> logger) : I
         }
 
         context.Response.StatusCode = status;
-        var message = status switch
+        var message = responseMessage ?? (status switch
         {
             StatusCodes.Status400BadRequest => "Solicitud inválida.",
             StatusCodes.Status404NotFound => "Recurso inexistente.",
             StatusCodes.Status409Conflict => "Conflicto de estado.",
             _ => "Error interno."
-        };
+        });
         var response = ApiResponse<object?>.Failure(
             message,
             new ApiError(code, detail, TraceId: context.TraceIdentifier));

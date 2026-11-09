@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using OtaASimulator.Application.Units;
+using OtaASimulator.Models.Common;
 using OtaASimulator.Models.Units;
 namespace OtaASimulator.Controllers;
 
@@ -9,6 +10,8 @@ namespace OtaASimulator.Controllers;
 public sealed class UnitBathroomsController(BathroomService service) : ControllerBase
 {
     [HttpPut]
-    public async Task<ActionResult<IReadOnlyList<BathroomResponse>>> Replace(long propertyId, long unitId, [FromBody, Required] List<BathroomRequest> request, CancellationToken ct) =>
-        Ok(await service.ReplaceAsync(propertyId, unitId, request, ct));
+    public async Task<ActionResult<ApiResponse<IReadOnlyList<BathroomResponse>>>> Replace(long propertyId, long unitId, [FromBody, Required] List<BathroomRequest> request, CancellationToken ct) =>
+        Ok(ApiResponse<IReadOnlyList<BathroomResponse>>.Success(
+            await service.ReplaceAsync(propertyId, unitId, request, ct),
+            "Baños de la unidad actualizados correctamente."));
 }
